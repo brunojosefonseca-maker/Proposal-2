@@ -6,6 +6,8 @@
 \usepackage{booktabs}   
 \usepackage[backend=biber,notes,17th]{biblatex-chicago}
 \addbibresource{referencesthesis.bib}
+\usepackage{float}
+\usepackage{placeins}
 
 \title{ Pre-Thesis Assignment}
 \author{Bruno Jose Fonseca}
@@ -91,7 +93,9 @@ Lastly I would make a econometric model that would try to isolate the educationa
 In this case the main coefficient of interest is gamma (y) the average difference in educational outcomes, specifically, standard deviation difference in test scores by district of control school between treatment and control group at a given distance to the lightning strike. If this is positive and statistically significant this would mean that further away from the lightning strike, you could see positive treatment effects, and that if it would have not been for the lightning strike, there could have been such positive effects in Teso as well. Lambda would be the average difference standard deviation difference between test scores normalized by district between treatment and control at km 0 from the lightning, and Beta would be the average standard deviation of the test score change per km further from the lightning of the control group. I am not including any particular control as through the nature of the RCT, on average treatment and control groups on any given distance from the lightning strike will have similar characteristics and the only difference would be the administration of the treatment. This, if positive and statistically significant, would demonstrate that indeed the more collaboration you have with a project, as the lightning could have only affected the control and treatment group through collaboration. I am afraid that as I keep decreasing and decreasing the sample, it might be smaller, especially considering that I am working with interaction terms. 
 
 \section{Initial Results}
-
+\FloatBarrier
+\input{outputs/table1}
+\FloatBarrier
 
 
 
