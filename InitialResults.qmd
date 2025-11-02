@@ -58,7 +58,7 @@ Creating Table 1
 df <- main %>% filter(restricted_sample == 1)
 
 # variables to summarize (must be numeric or 0/1)
-vars <- c("score_2000", "score_2001", "score_2002", "missing_score_2001", "dist_lig", "bs_questionnaire_result", "treatment", "teso")
+vars <- c("score_2000", "score_2001", "score_2002", "missing_score_2001", "dist_lig", "bs_questionnaire_result", "treatment", "teso", "ateso_percent")
 
 summ_one <- function(x, name) {
   tibble(
@@ -88,13 +88,15 @@ tab_tex <- knitr::kable(
   table1,
   format = "latex",
   booktabs = TRUE,
-  caption = "Table 1. Summary statistics",
+  caption = "Summary statistics",
   label   = "tab:summary",
   align   = c("l", rep("r", ncol(table1)-1)),
   col.names = c("Variable","N","Missing","Mean","SD","Min","Median","Max")
 )
 cat(tab_tex, file = "table1.tex")
 ```
+
+This is to push the table 1 into overleaf
 
 ```{bash}
 cat > .gitignore << 'EOF'
@@ -121,8 +123,25 @@ git commit -m "Add InitialResults.qmd and outputs/table1.tex; add .gitignore"
 git pull --rebase origin main
 
 git push origin main
+```
 
+Now a graph demonstrating the main correlation in data
 
+```{r}
+library(ggplot2)
+
+p <- ggplot(main_teso, aes(x = dist_lig, y = score_2002, color = treatment)) +
+  geom_point(alpha = 0.65) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    x = "Distance to lightning (km)",
+    y = "Test score (2002, normalized)",
+    color = "Treatment",
+    title = "Distance vs. 2002 Test Score"
+  ) +
+  theme_minimal()
+
+print(p)
 ```
 
 Extra
