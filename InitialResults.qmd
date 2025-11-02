@@ -1,0 +1,100 @@
+---
+title: "Initial Results"
+format: html
+editor: visual
+---
+
+Loading up the data
+
+```{r}
+library(haven)
+library(readxl)
+
+gsp_public  <- read_dta("gsp_public_baseline_PaperVersion.dta")
+school_gps <- read_xls("school gps.xls")
+
+
+```
+
+Now Cleaning it, calculating distance and merging
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(geosphere)
+
+school_gps <- school_gps |> mutate(
+  north = as.numeric(north), 
+  n_degree = as.numeric(n_degree)
+  )
+
+GPS_data <- mutate(school_gps, 
+lat = n_degree + north/60, 
+lon = e_degree + east/60)            
+
+ref <- GPS_data |> filter(schoolid == 916)
+
+dist_out <- GPS_data %>%
+  mutate(
+    dist_lig = distHaversine(
+      cbind(lon, lat),
+      c(ref$lon[1], ref$lat[1])
+    ) / 1000
+  ) %>%
+  arrange(dist_lig)
+
+main <- gsp_public |> rename(schoolid = school_baseline
+)
+
+main <- merge(main, dist_out, by = "schoolid")
+
+
+                   
+```
+
+Creating Table 1
+
+```{r}
+df <- main %>% filter(restricted_sample == 1)
+
+# variables to summarize (must be numeric or 0/1)
+vars <- c("score_2000", "score_2001", "score_2002", "missing_score_2001", "dist_lig", "bs_questionnaire_result", "treatment", "teso")
+
+summ_one <- function(x, name) {
+  tibble(
+    Variable = name,
+    N        = sum(!is.na(x)),
+    Missing  = sum(is.na(x)),
+    Mean     = mean(x, na.rm = TRUE),
+    SD       = sd(x, na.rm = TRUE),
+    Min      = min(x, na.rm = TRUE),
+    Median   = median(x, na.rm = TRUE),
+    Max      = max(x, na.rm = TRUE)
+  )}
+
+
+table1 <- map_dfr(vars, ~ summ_one(df[[.x]], .x)) %>%
+  mutate(across(c(Mean, SD, Min, Median, Max), ~ round(.x, 3)))
+
+table1
+```
+
+Extra
+
+Now this is a test for a possible endogenous variable in an IV analysis, just with distance and questionnaire dist_lig was significant, however when controlling for score_2000 it lost its predictive power, which makes me believe that its had a lot of OVB.
+
+```{r}
+
+main_teso <- main |> filter(
+  teso == 1, 
+  restricted_sample == 1
+)
+
+m1 <- lm(formula = bs_questionnaire_result ~ dist_lig, data = main_teso) 
+m2001 <- lm(score_2001 ~ dist_lig*treatment, data = main_teso)
+m2002 <- lm(score_2002 ~ dist_lig*treatment, data = main_teso)
+
+summary(m1)
+summary(m2001)
+summary(m2002)
+```

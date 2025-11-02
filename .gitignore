@@ -1,0 +1,10 @@
+.ipynb_checkpoints/
+.Rhistory
+.Rproj.user/
+__pycache__/
+*.log
+*.aux *.bbl *.blg *.out *.toc
+*.dta
+*.xls
+outputs/*.tmp
+data_raw/
