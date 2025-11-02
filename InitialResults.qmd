@@ -79,6 +79,52 @@ table1 <- map_dfr(vars, ~ summ_one(df[[.x]], .x)) %>%
 table1
 ```
 
+Now to upload this table into overleaf
+
+```{r}
+library(knitr)
+
+tab_tex <- knitr::kable(
+  table1,
+  format = "latex",
+  booktabs = TRUE,
+  caption = "Table 1. Summary statistics",
+  label   = "tab:summary",
+  align   = c("l", rep("r", ncol(table1)-1)),
+  col.names = c("Variable","N","Missing","Mean","SD","Min","Median","Max")
+)
+cat(tab_tex, file = "table1.tex")
+```
+
+```{bash}
+cat > .gitignore << 'EOF'
+.ipynb_checkpoints/
+.Rhistory
+.Rproj.user/
+__pycache__/
+*.log
+*.aux *.bbl *.blg *.out *.toc
+*.dta
+*.xls
+outputs/*.tmp
+data_raw/
+EOF
+
+mkdir -p outputs
+mv table1.tex outputs/table1.tex
+
+git add InitialResults.qmd outputs/table1.tex .gitignore
+git status
+
+git commit -m "Add InitialResults.qmd and outputs/table1.tex; add .gitignore"
+
+git pull --rebase origin main
+
+git push origin main
+
+
+```
+
 Extra
 
 Now this is a test for a possible endogenous variable in an IV analysis, just with distance and questionnaire dist_lig was significant, however when controlling for score_2000 it lost its predictive power, which makes me believe that its had a lot of OVB.
