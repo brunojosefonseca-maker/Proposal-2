@@ -130,18 +130,43 @@ Now a graph demonstrating the main correlation in data
 ```{r}
 library(ggplot2)
 
-p <- ggplot(main_teso, aes(x = dist_lig, y = score_2002, color = treatment)) +
-  geom_point(alpha = 0.65) +
-  geom_smooth(method = "lm", se = FALSE) +
+main_teso <- main |> filter(teso == 1, restricted_sample == 1) 
+
+p <- ggplot(main_teso, aes(x = dist_lig, y = score_2002)) +
+  geom_point(aes(color = factor(treatment, levels = c(0,1),
+                                labels = c("Control","Treatment"))),
+             alpha = 0.6) +
+  geom_smooth(aes(color = factor(treatment, levels = c(0,1),
+                                 labels = c("Control","Treatment")),
+                  linetype = factor(treatment, levels = c(0,1),
+                                    labels = c("Control","Treatment"))),
+              method = "lm", se = FALSE, linewidth = 1) +
   labs(
     x = "Distance to lightning (km)",
     y = "Test score (2002, normalized)",
-    color = "Treatment",
-    title = "Distance vs. 2002 Test Score"
+    color = "Group",
+    linetype = "Group",
+    title = "Distance vs. 2002 Test Score by Treatment"
   ) +
   theme_minimal()
 
-print(p)
+# Preview
+p
+```
+
+Pushing it to Overleaf
+
+```{r}
+if (!dir.exists("outputs")) dir.create("outputs")
+ggsave("outputs/fig_distlig_score2002_teso1.pdf", p, width = 6.5, height = 4.2)
+ggsave("outputs/fig_distlig_score2002_teso1.png", p, width = 6.5, height = 4.2, dpi = 300)
+```
+
+```{bash}
+git add outputs/fig_distlig_score2002_teso1.*
+git commit -m "Add dist_lig vs score_2002 plot (teso==1, restricted sample) by treatment"
+git pull --rebase origin main
+git push origin main
 ```
 
 Extra
