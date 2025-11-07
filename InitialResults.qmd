@@ -48,7 +48,6 @@ main <- gsp_public |> rename(schoolid = school_baseline
 
 main <- merge(main, dist_out, by = "schoolid")
 
-
                    
 ```
 
@@ -169,6 +168,8 @@ git pull --rebase origin main
 git push origin main
 ```
 
+Now to the OLS regression
+
 Extra
 
 Now this is a test for a possible endogenous variable in an IV analysis, just with distance and questionnaire dist_lig was significant, however when controlling for score_2000 it lost its predictive power, which makes me believe that its had a lot of OVB.
@@ -176,15 +177,57 @@ Now this is a test for a possible endogenous variable in an IV analysis, just wi
 ```{r}
 
 main_teso <- main |> filter(
-  teso == 1, 
-  restricted_sample == 1
-)
+  teso == 1, restricted_sample ==1)
 
-m1 <- lm(formula = bs_questionnaire_result ~ dist_lig, data = main_teso) 
+m1 <- lm(formula = bs_questionnaire_result ~ dist_lig*treatment + score_2000, data = main_teso)
+m2 <- lm(formula = score_2002 ~ bs_questionnaire_result + score_2000, data = main_teso)
 m2001 <- lm(score_2001 ~ dist_lig*treatment, data = main_teso)
 m2002 <- lm(score_2002 ~ dist_lig*treatment, data = main_teso)
 
 summary(m1)
-summary(m2001)
-summary(m2002)
+summary(m2)
+
+p <- ggplot(main_teso, aes(x = dist_lig, y = bs_questionnaire_result)) +
+  geom_point(aes(color = factor(treatment, levels = c(0,1),
+                                labels = c("Control","Treatment"))),
+             alpha = 0.6) +
+  geom_smooth(aes(color = factor(treatment, levels = c(0,1),
+                                 labels = c("Control","Treatment")),
+                  linetype = factor(treatment, levels = c(0,1),
+                                    labels = c("Control","Treatment"))),
+              method = "lm", se = FALSE, linewidth = 1) +
+  labs(
+    x = "Distance to lightning (km)",
+    y = "Collaboration",
+    color = "Group",
+    linetype = "Group",
+    title = "Distance vs. 2002 Test Score by Treatment"
+  ) +
+  theme_minimal()
+
+p
+```
+
+DiD maybe worked?
+
+```{r}
+library(readr)
+
+df_long <- main |> filter(teso == 1) |> pivot_longer(cols = c(score_2001, score_2000, score_2002), names_to = "year", values_to = "score")
+
+df_DiD <- df_long |> mutate(year = parse_number(year)) |> mutate(period = as.integer(year >= 2002))
+
+m_did <- lm(score ~ period * treatment * dist_lig, data = df_DiD)
+summary(m_did)
+
+d01 <- subset(df_DiD, year %in% c(2000, 2001))
+d01$post <- as.integer(d01$year == 2001)
+m01 <- lm(score ~ post*treatment*dist_lig , data = d01)
+summary(m01)   # coef on post:treatment = ATT for 2001
+
+# 2002 vs 2000
+d02 <- subset(df_DiD, year %in% c(2000, 2002))
+d02$post <- as.integer(d02$year == 2002)
+m02 <- lm(score ~ post*treatment*dist_lig, data = d02)
+summary(m02)
 ```
