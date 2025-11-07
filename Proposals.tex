@@ -4,12 +4,12 @@
 \usepackage{indentfirst}
 \usepackage{amsmath}
 \usepackage{booktabs}   
-\usepackage[backend=biber,notes,17th]{biblatex-chicago}
+\usepackage[backend=biber,notes]{biblatex-chicago}
 \addbibresource{referencesthesis.bib}
 \usepackage{float}
 \usepackage{placeins}
 
-\title{ Pre-Thesis Assignment}
+\title{Pre-Thesis Assignments}
 \author{Bruno Jose Fonseca}
 \date{November 2025}
 
@@ -64,9 +64,9 @@ There is another dataset that needs to be constructed for this thesis. I want to
 
 This data seems sufficient, to tackle the questions at hand. There is a lot of data from a 3 year RCT that is able to be used in a variety of ways. This has data from 3 different years, meaning that I can check if the effects from the lightning change from year 1 of the RCT to year 2. 
 
-	Though the data has limitations, there is no specific value of cooperation with the program and any possible measure would be an imperfect proxy to such. There is also significant data attrition, especially in the Teso district, as mentioned in the original paper. This is seen especially in the further years of the RCT as students move schools or choose not to take the exam. Furthermore though ateso might be an accurate proxy for ethnicity there is no information collected on the individual ethnicity of the student. There are two problems with this: first this is in the school level, its the percentage of students in the school, and then this value is given to every individual student in the school, so there is no specific data of the ethnicity of the student. Also its not a perfect proxy as there might be students who though not speak ateso as their first language, they still may be from the ethnic community and impacted by the anti NGO rhetoric. 
+Though the data has limitations, there is no specific value of cooperation with the program and any possible measure would be an imperfect proxy to such. There is also significant data attrition, especially in the Teso district, as mentioned in the original paper. This is seen especially in the further years of the RCT as students move schools or choose not to take the exam. Furthermore though ateso might be an accurate proxy for ethnicity there is no information collected on the individual ethnicity of the student. There are two problems with this: first this is in the school level, its the percentage of students in the school, and then this value is given to every individual student in the school, so there is no specific data of the ethnicity of the student. Also its not a perfect proxy as there might be students who though not speak ateso as their first language, they still may be from the ethnic community and impacted by the anti NGO rhetoric. 
 	
-	Another limitation is that, as I am focusing in Teso, there is a significant decrease in observations from the original and even from the restricted when Busia is not considered. This reduces from 7258 observations to 2941 observations. Though even then, this data seems sufficient to achieve adequate conclusions, there might be complications, especially as considering possible missing values or other issues which may reduce the applicable observations even further. In some models I would be focusing on girls, as they are the main focus of the RCT which would reduce the number of observations significantly. Ultimately considering missing values there are some regressions which would be run with only ~800 or ~1000 observations, which though sufficient for a simple OLS, might not have sufficient power for an interaction term analysis, which I have researched needs to be between 4 to 16 times greater than what would be necessary for a simple analysis. \autocites{gelman-2018-need16}
+Another limitation is that, as I am focusing in Teso, there is a significant decrease in observations from the original and even from the restricted when Busia is not considered. This reduces from 7258 observations to 2941 observations. Though even then, this data seems sufficient to achieve adequate conclusions, there might be complications, especially as considering possible missing values or other issues which may reduce the applicable observations even further. In some models I would be focusing on girls, as they are the main focus of the RCT which would reduce the number of observations significantly. Ultimately considering missing values there are some regressions which would be run with only ~800 or ~1000 observations, which though sufficient for a simple OLS, might not have sufficient power for an interaction term analysis, which I have researched needs to be between 4 to 16 times greater than what would be necessary for a simple analysis. \autocites{gelman-2018-need16}
 
 \subsection{Econometric Models}
 I want to investigate the proportion of students who don't take the 2001 exam in each school as a measure of collaboration. The model is: \[
@@ -92,13 +92,42 @@ Lastly I would make a econometric model that would try to isolate the educationa
 
 In this case the main coefficient of interest is gamma (y) the average difference in educational outcomes, specifically, standard deviation difference in test scores by district of control school between treatment and control group at a given distance to the lightning strike. If this is positive and statistically significant this would mean that further away from the lightning strike, you could see positive treatment effects, and that if it would have not been for the lightning strike, there could have been such positive effects in Teso as well. Lambda would be the average difference standard deviation difference between test scores normalized by district between treatment and control at km 0 from the lightning, and Beta would be the average standard deviation of the test score change per km further from the lightning of the control group. I am not including any particular control as through the nature of the RCT, on average treatment and control groups on any given distance from the lightning strike will have similar characteristics and the only difference would be the administration of the treatment. This, if positive and statistically significant, would demonstrate that indeed the more collaboration you have with a project, as the lightning could have only affected the control and treatment group through collaboration. I am afraid that as I keep decreasing and decreasing the sample, it might be smaller, especially considering that I am working with interaction terms. 
 
+\newpage
 \section{Initial Results}
-\FloatBarrier
-\input{outputs/table1}
+
+\begin{table}[H] % drop [H] if you don’t want to force placement
+  \centering
+  \caption{Table 1. Summary statistics}
+  \label{tab:summary}
+  \input{outputs/table1} % this file should contain only the tabular
+\end{table}
+
+This is data and spread related to the restricted sample, which as discussed above in previous proposal assignments, will be the focus of this research. Schools that dropped out of the program, and hence the data is not available, as well as schools that had insufficient test scores will not be considered. 
+
+After further exploring the data I have discovered new points of interest, especially related to test scores that was surprising at first. There is more data related to the 2002 scores then related to the 2001 and 2000 scores. This was at first surprising, as when normally there are multiple rounds RCTs there is significant data attrition from one year to the next. This was something that even was tackled in the original paper. \autocites{kremer-miguel-thornton-2004} Ultimately this was probably given to the fact that the RCT and scholarship program was better established in 2002, after there were scholarship winners. This probably encouraged students to pursue academic achievements and to take the exam to qualify. Furthermore, in Teso the 2002 exams were offered by the NGO running the scholarship program at no cost. The children were only able to take the 2001 and 2000 exams if the family paid a fee, however in 2002, due to electoral uncertainty the exams were canceled in Teso. As the data was required for the study, the NGO made an exam modeled after the national exam given in other districts and proctored the 2002 exam themselves. As there was no fee more students were probably encouraged to take the exam in 2002 compared to the two previous years. 
+
+This leads me to briefly adapt my model that before was focusing on 2001 text scores, to focus on 2002 test scores which are more complete. 
+
+What is also of note is that all other variables other than test scores are complete, this is as they are created by the researchers, either as indicator variables to divide into groups, or signal participation such as treatment (to indicate whether the student is of a treatment or control school) or bs\_questionnaire\_result which is whether the pupil answered the survey question when asked by the proctor of the RCT. Other variables such as dist\_lig are assigned to each individual based on the distance from the school with which they are associated, and ateso\_percent being the percentage of students in their school, in the form of a decimal, who have ateso as their first language. Ateso is the ethnic language of the teso ethnic group. This can be a proxy for ethnic group. 
+
+
+\begin{figure}[H] % or [htbp]
+  \centering
+  \includegraphics[width=\linewidth]{outputs/fig_distlig_score2002_teso1.pdf}
+  \caption{Distance to lightning vs. 2002 test score (TESO=1, restricted sample). Lines are OLS fits by group.}
+  \label{fig:distlig_score2002_teso1}
+\end{figure}
+
+This is a graph that maps the main correlation in the research. In the x axis there is the distance to the lightning of each pupil's school. On the y axis is the 2002 normalized test scores using as reference the control's group average score in the Teso district. There are two lines demonstrating the correlation of two different groups, the treatment and control groups, those that had the opportunity to gain the scholarship and those that didn't have this opportunity. There is a lot of variation with pupils inside each school. For example in the control school closest to the lightning, there are students that preform 3 standard deviations below the average district score while others almost preform 2 standard deviation above. If the average of majority of the pupils in a given school are scoring below 0 in z score, this then means that the school is an under performing school as compared to the Teso district as a whole. 
+
+Furthermore one can see that in the middle distance of 10-15 km from the lightning there is a lot of schools and pupil data. This is given as the lightning hit in the upper half of Teso, and this middle represents schools and pupils both located north and south of where the lightning hit. This is an interesting idea, which can be developed into a control if seen as relevant. 
+
+This graph demonstrates two important things for this research. First, it demonstrates that that there is a relationship between distance and test scores in treatment and control groups. The test scores increase with distance further away from the lightning. It can be seen that for the schools closest to the lightning strike on average preformed worse compared to schools further away. Especially the schools closest to the test scores preformed below average, both treatment and control. Secondly this is a trend apparent and noticeably applicable to both groups. Both groups have an increasing trend with distance and appear to be on a similar rate, as both overlaps significantly throughout the regression analysis. However the best way to analyze this is through the model established:\[ E_{s\,t} = \alpha + \lambda\,d_{s\,t} + \beta\,T_{s\,t} +  \gamma\ (d_{s\,t}* T_{s\,t})+ \epsilon_{s t}\]
 
 
 
-\FloatBarrier
+
+\newpage
 \printbibliography
 
 \end{document}
