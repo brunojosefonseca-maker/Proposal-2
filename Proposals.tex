@@ -1,5 +1,5 @@
 \documentclass{article}
-\usepackage{graphicx} % Required for inserting images
+\usepackage[graphicx]{physics}
 \usepackage{mathtools}
 \usepackage{indentfirst}
 \usepackage{amsmath}
@@ -8,12 +8,21 @@
 \addbibresource{referencesthesis.bib}
 \usepackage{float}
 \usepackage{placeins}
+\usepackage{titlesec}
+
+
+
+
+
 
 \title{Pre-Thesis Assignments}
 \author{Bruno Jose Fonseca}
 \date{November 2025}
 
 \begin{document}
+
+\titlespacing*{\section}*{0pt}{2em}{3em}
+\titlespacing*{\linewidth}*{0pt}{2em}{3em}
 
 \maketitle
 
@@ -125,7 +134,25 @@ Furthermore one can see that in the middle distance of 10-15 km from the lightni
 This graph demonstrates two important things for this research. First, it demonstrates that that there is a relationship between distance and test scores in treatment and control groups. The test scores increase with distance further away from the lightning. It can be seen that for the schools closest to the lightning strike on average preformed worse compared to schools further away. Especially the schools closest to the test scores preformed below average, both treatment and control. Secondly this is a trend apparent and noticeably applicable to both groups. Both groups have an increasing trend with distance and appear to be on a similar rate, as both overlaps significantly throughout the regression analysis. However the best way to analyze this is through the model established:\[ E_{s\,t} = \alpha + \lambda\,d_{s\,t} + \beta\,T_{s\,t} +  \gamma\ (d_{s\,t}* T_{s\,t})+ \epsilon_{s t}\]
 
 
-\input{outputs/table_reg.tex} 
+\begin{table}[H] % drop [H] if you don’t want to force placement
+  \centering
+  \caption{Table 1. Summary statistics}
+  \label{tab:summary}
+  \input{outputs/table_reg} % this file should contain only the tabular
+\end{table}
+
+
+\begin{center}
+\begin{tabular}{ll}
+\textbf{Variable} & \textbf{Value}\\
+\hline
+Contant & 0.\\
+Solid cylinder (radius $R$) & central axis \\
+Solid sphere (radius $R$) & diameter \\
+Rod (length $L$) about centre & perpendicular to rod\\
+Rod about one end & perpendicular to rod\\
+\end{tabular}
+\end{center}
 
 
 
