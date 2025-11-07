@@ -1,0 +1,30 @@
+\begin{table}[!htbp]\centering\small\begin{threeparttable}
+\caption{OLS: score$_{2002}$ on Treatment, Distance, and Their Interaction}
+\label{tab:score2002_treat_dist}
+\begin{table}
+\centering
+\begin{tblr}[         %% tabularray outer open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]},
+column{2}={}{halign=c,},
+column{1}={}{halign=l,},
+}                     %% tabularray inner close
+\toprule
+& (1) \\ \midrule %% TinyTableHeader
+Constant                   & \num{-0.344}*** \\
+& (\num{0.058})   \\
+Distance to lightning (km) & \num{0.030}***  \\
+& (\num{0.004})   \\
+Treatment                  & \num{-0.073}    \\
+& (\num{0.084})   \\
+Treatment × Distance       & \num{0.005}     \\
+& (\num{0.006})   \\
+Mean of dependent variable & 0.040            \\
+\bottomrule
+\end{tblr}
+\end{table}
+\begin{tablenotes}[flushleft]\footnotesize
+\item Notes: i.i.d. standard errors in parentheses. Stars: * $p<0.10$, ** $p<0.05$, *** $p<0.01$.
+\end{tablenotes}
+\end{threeparttable}\end{table}
