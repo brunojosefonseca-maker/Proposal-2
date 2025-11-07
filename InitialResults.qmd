@@ -43,10 +43,11 @@ dist_out <- GPS_data %>%
   ) %>%
   arrange(dist_lig)
 
-main <- gsp_public |> rename(schoolid = school_baseline
-)
+main <- gsp_public |> rename(school_id = school_baseline)
+dist_out <- dist_out |> rename(school_id = schoolid)
 
-main <- merge(main, dist_out, by = "schoolid")
+main <- merge(main, dist_out, by = "school_id")
+
 
                    
 ```
@@ -169,6 +170,72 @@ git push origin main
 ```
 
 Now to the OLS regression
+
+```{r}
+install.packages("modelsummary")
+library(modelsummary)
+dir.create("Proposal-2/outputs", showWarnings = FALSE, recursive = TRUE)
+
+lm1 <- lm(main_teso, formula = score_2002 ~ dist_lig*treatment)
+
+modelsummary(
+  lm1,
+  coef_map = c("(Intercept)"="Constant","treatment"="Treatment",
+               "dist_lig"="Distance to lightning (km)",
+               "treatment:dist_lig"="Treatment × Distance"),
+  statistic = "({std.error}) [{p.value}]",
+  gof_map = c("nobs","r.squared","adj.r.squared"),
+  title = "OLS (i.i.d. standard errors)",
+  notes = "Standard errors assume i.i.d. errors.",
+  output = "Proposal-2/outputs/table_reg.tex")
+
+```
+
+```{r}
+library(modelsummary)
+
+lm1 <- lm(score_2002 ~ dist_lig * treatment, data = main_teso)
+options(modelsummary_format_numeric_latex = "siunitx")
+mdv <- mean(main_teso$score_2002, na.rm = TRUE)
+
+tex <- modelsummary(
+  list("(1)" = lm1),
+  coef_map = c(
+    "(Intercept)"        = "Constant",
+    "dist_lig"           = "Distance to lightning (km)",
+    "treatment"          = "Treatment",
+    "dist_lig:treatment" = "Treatment × Distance"
+  ),
+  estimate  = "{estimate}{stars}",
+  statistic = "({std.error})",
+  stars     = c("*"=.10, "**"=.05, "***"=.01),
+  fmt       = 3,
+  gof_map   = c("nobs"="Sample size", "r.squared"="$R^2$", "adj.r.squared"="$R^2_{adj}$"),
+  add_rows  = data.frame(term = "Mean of dependent variable", `(1)` = sprintf("%.3f", mdv)),
+  output    = "latex"   # returns an S4 object
+)
+
+cat(
+  "\\begin{table}[!htbp]\\centering\\small\\begin{threeparttable}\n",
+  "\\caption{OLS: score$_{2002}$ on Treatment, Distance, and Their Interaction}\n",
+  "\\label{tab:score2002_treat_dist}\n",
+  as.character(tex),   # <<-- coerce to character
+  "\n\\begin{tablenotes}[flushleft]\\footnotesize\n",
+  "\\item Notes: i.i.d. standard errors in parentheses. Stars: * $p<0.10$, ** $p<0.05$, *** $p<0.01$.\n",
+  "\\end{tablenotes}\n\\end{threeparttable}\\end{table}\n",
+  file = "outputs/table_reg_journal.tex", sep = ""
+)
+
+```
+
+Now I need to pass it to overleaf
+
+```{bash}
+git add outputs/table_reg_journal.tex
+git pull --rebase origin main     # bring remote changes on top of yours
+# if conflicts: fix files, then -> git add <fixed-files>; git rebase --continue
+git push origin main
+```
 
 Extra
 
