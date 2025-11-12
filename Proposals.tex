@@ -9,8 +9,9 @@
 \usepackage{float}
 \usepackage{placeins}
 \usepackage{titlesec}
-
-
+\usepackage{siunitx}
+\sisetup{detect-all, group-separator={,}, group-minimum-digits=3}
+\newcommand{\est}[2]{\num{#1}\textsuperscript{#2}} % #2 can be *** , ** , * , or empty
 
 
 
@@ -21,8 +22,8 @@
 
 \begin{document}
 
-\titlespacing*{\section}*{0pt}{2em}{3em}
-\titlespacing*{\linewidth}*{0pt}{2em}{3em}
+\titlespacing*{\section}*{0pt}{2em}
+\titlespacing*{\linewidth}*{0pt}{2em}
 
 \maketitle
 
@@ -106,12 +107,12 @@ In this case the main coefficient of interest is gamma (y) the average differenc
 
 \begin{table}[H] % drop [H] if you don’t want to force placement
   \centering
-  \caption{Table 1. Summary statistics}
+  \caption{Summary statistics}
   \label{tab:summary}
   \input{outputs/table1} % this file should contain only the tabular
 \end{table}
 
-This is data and spread related to the restricted sample, which as discussed above in previous proposal assignments, will be the focus of this research. Schools that dropped out of the program, and hence the data is not available, as well as schools that had insufficient test scores will not be considered. 
+This is data and spread related to the restricted sample, which as discussed above in previous proposal assignments, will be the focus of this research. The restricted sample excludes schools that dropped out of the program, which data would not be available regardless as they dropped out before the first exam post treatment was administered, as well as schools that had no data regarding the baseline 2000 exams, as this would limit comparison to pre treatment. In the study, in Teso they focused on the 2002 exams, and used 2001 as a baseline, focusing on effect from the treatment from 2001 to 2002.\autocites{kremer-miguel-thornton-2004}
 
 After further exploring the data I have discovered new points of interest, especially related to test scores that was surprising at first. There is more data related to the 2002 scores then related to the 2001 and 2000 scores. This was at first surprising, as when normally there are multiple rounds RCTs there is significant data attrition from one year to the next. This was something that even was tackled in the original paper. \autocites{kremer-miguel-thornton-2004} Ultimately this was probably given to the fact that the RCT and scholarship program was better established in 2002, after there were scholarship winners. This probably encouraged students to pursue academic achievements and to take the exam to qualify. Furthermore, in Teso the 2002 exams were offered by the NGO running the scholarship program at no cost. The children were only able to take the 2001 and 2000 exams if the family paid a fee, however in 2002, due to electoral uncertainty the exams were canceled in Teso. As the data was required for the study, the NGO made an exam modeled after the national exam given in other districts and proctored the 2002 exam themselves. As there was no fee more students were probably encouraged to take the exam in 2002 compared to the two previous years. 
 
@@ -131,32 +132,34 @@ This is a graph that maps the main correlation in the research. In the x axis th
 
 Furthermore one can see that in the middle distance of 10-15 km from the lightning there is a lot of schools and pupil data. This is given as the lightning hit in the upper half of Teso, and this middle represents schools and pupils both located north and south of where the lightning hit. This is an interesting idea, which can be developed into a control if seen as relevant. 
 
-This graph demonstrates two important things for this research. First, it demonstrates that that there is a relationship between distance and test scores in treatment and control groups. The test scores increase with distance further away from the lightning. It can be seen that for the schools closest to the lightning strike on average preformed worse compared to schools further away. Especially the schools closest to the test scores preformed below average, both treatment and control. Secondly this is a trend apparent and noticeably applicable to both groups. Both groups have an increasing trend with distance and appear to be on a similar rate, as both overlaps significantly throughout the regression analysis. However the best way to analyze this is through the model established:\[ E_{s\,t} = \alpha + \lambda\,d_{s\,t} + \beta\,T_{s\,t} +  \gamma\ (d_{s\,t}* T_{s\,t})+ \epsilon_{s t}\]
+This graph demonstrates two important things for this research. First, it demonstrates that that there is a relationship between distance and test scores in treatment and control groups. The test scores increase with distance further away from the lightning. It can be seen that for the schools closest to the lightning strike on average preformed worse compared to schools further away. Especially the schools closest to the test scores preformed below average, both treatment and control. Secondly this is a trend apparent and noticeably applicable to both groups. Both groups have an increasing trend with distance and appear to be on a similar rate, as both overlaps significantly throughout the regression analysis. However the best way to analyze this is through the model established:\[ E_{s\,2002} = \alpha + \lambda\,d_{s\,t} + \beta\,T_{s\,t} +  \gamma\ (d_{s\,t}* T_{s\,t})+ \epsilon_{s t}\]
 
+When running this regression in the data these are the follwing results:
 
 \begin{table}[H] % drop [H] if you don’t want to force placement
-  \centering
-  \caption{Table 1. Summary statistics}
   \label{tab:summary}
-  \input{outputs/table_reg} % this file should contain only the tabular
+  \input{outputs/table_reg_journal} % this file should contain only the tabular
 \end{table}
 
+The main coefficient of this analysis as described in the previous parts would be the one established by the interaction term. Though it is positive at a .005 increase in z score per km away from the lightning strike comparing treatment and control schools, it is not statistically significant, and hence it cannot be ruled out with a 95\% confidence that the distance from the lightning has no descriptive power in the behavior of the treatment group. The coefficient for the treatment group is negative which can suggest that maybe the treatment schools actively preformed worse then control schools in the areas closest to the lightning strike. Though this term is also not statistically significant, and the null hypothesis cannot be discarded with a 95\% confidence. Though if these values were statistically significant, the break even point in which treatment schools start preforming better then control schools in similar locations is at 14 km away from the lightning, given the max value is 24 km away from the lightning. 
 
-\begin{center}
-\begin{tabular}{ll}
-\textbf{Variable} & \textbf{Value}\\
-\hline
-Contant & 0.\\
-Solid cylinder (radius $R$) & central axis \\
-Solid sphere (radius $R$) & diameter \\
-Rod (length $L$) about centre & perpendicular to rod\\
-Rod about one end & perpendicular to rod\\
-\end{tabular}
-\end{center}
+One value that is statistically significant is the distance from lightning itself. This essentially says that for the control group the students test scores tend to increase the further away from the lightning strike, and this value is statistically significant with more then 99\% confidence of being statistically different from zero. This complementarily with the non statistically different interaction term and treatment coefficient demonstrates that the null hypothesis that distance effects both treatment and control groups in similar ways. 
 
+This can also be seen when regressing the same model on the $scores\_2001$. The year where the treatment started and that the lightning hit the school impacting the willingness of students, and their parents to collaborate: \[ E_{s\,2001} = \alpha + \lambda\,d_{s\,t} + \beta\,T_{s\,t} +  \gamma\ (d_{s\,t}* T_{s\,t})+ \epsilon_{s t}\]
 
+\begin{table}[H] % drop [H] if you don’t want to force placement
+  \caption{OLS for 2001 test scores}
+  \input{outputs/score2001OLS} % this file should contain only the tabular
+\end{table}
+
+Table 3 tells a similar story as seen in the previous regression. The interaction term is not statistically significant, meaning that the null hypothesis cannot be rejected that distance from the lightning strike effects both treatment and control schools in the same way. Furthermore similar to table 2, the distance from the lightning is statistically significant at more then a 99\% confidence interval, meaning that each km away from the lightning strike, control schools preform on average .055 z scores better per km further away, the school furthest in Teso of 24 km would have on average a 1.2 standard deviations more then schools closest to the lightning. This affect is diminished significantly when controlling for 2000 baseline scores to the coefficient dropping to .019, meaning that the same distance of 24 km would correspond with around a .456 z score above the control district average. The 2000 baseline score proves to be an important control as it is also correlated with distance, and is important to not that the 2000 exams were taken before the RCT and the lightning. 
+
+This suggests that the distance from the lightning impacts both treatment and control schools, and a non statistical different from both. If we were to consider the sign of the coefficient, the coefficient for the interaction term is negative, which would then suggest that treatment effects would decrease the further out from the lightning strike. 
+
+This would then disconsider the initial hypothesis in that the lightning and impact only the treatment school, and in retrospect this makes sense. After the lightning 6 schools dropped out, 3 of them treatment group and 3 of them control group. Also control groups needed to contribute to the RCT, with answering questionnaires and other participation, which could have made then unsure whether their test scores would count or not. In this case even the control schools closest and hence heavily impacted by the lightning would also engage in boycott. This undermines the assumption that control schools would not be effected. 
+
+This then leads opportunities of research with other models, maybe an instrumental variable would be an interesting approach, of a difference in difference considering the baseline scores and the treatment variable.
 
 \newpage
 \printbibliography
-
 \end{document}
