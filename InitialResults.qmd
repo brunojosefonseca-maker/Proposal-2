@@ -172,11 +172,13 @@ git push origin main
 Now to the OLS regression
 
 ```{r}
-install.packages("modelsummary")
+#install.packages("modelsummary")
 library(modelsummary)
 dir.create("Proposal-2/outputs", showWarnings = FALSE, recursive = TRUE)
 
-lm1 <- lm(main_teso, formula = score_2002 ~ dist_lig*treatment)
+lm1 <- lm(main_teso, formula = score_2002 ~ dist_lig*treatment+ score_2000)
+
+summary(lm1)
 
 modelsummary(
   lm1,
@@ -197,6 +199,8 @@ library(modelsummary)
 lm1 <- lm(score_2002 ~ dist_lig * treatment, data = main_teso)
 options(modelsummary_format_numeric_latex = "siunitx")
 mdv <- mean(main_teso$score_2002, na.rm = TRUE)
+
+summary(lm1)
 
 tex <- modelsummary(
   list("(1)" = lm1),
@@ -235,6 +239,14 @@ git add outputs/table_reg_journal.tex
 git pull --rebase origin main     # bring remote changes on top of yours
 # if conflicts: fix files, then -> git add <fixed-files>; git rebase --continue
 git push origin main
+```
+
+```{r}
+lm2001 <- lm(main_teso, formula = score_2001 ~ dist_lig*treatment)
+lm2001c <- lm(main_teso, formula = score_2001 ~ dist_lig*treatment + score_2000)
+
+summary(lm2001)
+summary(lm2001c)
 ```
 
 Extra
